@@ -1,2 +1,2 @@
-# spirograph
-My version of the spirograph toolset.
+# Spirograph
+Andreas Lehns version of the spirograph toolset.
