@@ -9,8 +9,8 @@
             <path id="spirograph" stroke="blue" stroke-width="1" fill-opacity="0"/>
         </svg>
         <script>
-            let rotator = new CircularGearWheel(40, 18);
-            let stator = new CircularGearWheel(72);
+            let rotator = new CircularGearWheel(55, 25);
+            let stator = new CircularGearWheel(-95);
             let spiro = new Spirograph(stator, rotator);
             spirograph.setAttribute("d", spiro.path());
         </script>

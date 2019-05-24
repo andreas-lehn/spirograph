@@ -90,7 +90,7 @@ class Spirograph {
     stepCount() {
         let rt = this.rotator.teeth;
         let st = this.stator.teeth;
-        return (rt == 0) ? st : kgv(Math.abs(rt), st);
+        return (rt == 0) ? st : kgv(Math.abs(rt), Math.abs(st));
     }
 
     /* Returns the SVG path of the spirograph */
