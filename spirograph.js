@@ -6,13 +6,21 @@ let MODUL = 1;
 let TEETH_LENGTH = Math.PI * MODUL;
 
 class GearWheel {
+    /**
+     * Constructs a GearWheel that can be used as stator or rotator
+     * 
+     * @param {Number} teeth Number of teeth
+     * @param {Number} excenter Distance from the center in mm 
+     * @param {Number} offset Number of teeth the exenter is offseted 
+     */
     constructor(teeth, excenter, offset) {
         this.teeth = teeth;
         this.excenter = excenter;
         this.offset = offset;
     }
 
-    /* Calculate the teeth pose of teeth n.
+    /** 
+     * Calculate the teeth pose of teeth n.
      *
      * The teeth pos consists of the position of the teeth and its angle.
      * This mehtod has to be overriden by subclasses.
@@ -21,7 +29,12 @@ class GearWheel {
         return { x: 0, y:0, alpha: 0};
     }
 
-    /* Calculates the center position of the gearwheel at a teeth position pose at step n */
+    /**
+     * Calculates the center position of the gearwheel at a teeth position pose at step n
+     * 
+     * @param {Pose} pose Pose of the teeth
+     * @param {Number} n Step
+     */
     center(pose1, n) {
         let pose2 = this.teethPose(n);
         let alpha = pose1.alpha + pose2.alpha;
@@ -32,12 +45,12 @@ class GearWheel {
     }
 
     excenterPos(pose1, n) {
-        let c = this.center(pose1, n);
-        let pose2 = this.teethPose(0);
+        let pose2 = this.teethPose(n);
         let alpha = pose1.alpha + pose2.alpha;
+        let c = this.center(pose1, n);
         return {
-            x: pose1.x + this.excenter * (-pose2.x * Math.cos(alpha) + pose2.y * Math.sin(alpha)),
-            y: pose1.y + this.excenter * ( pose2.x * Math.sin(alpha) + pose2.y * Math.cos(alpha))
+            x: c.x + this.excenter * Math.sin(alpha),
+            y: c.y + this.excenter * Math.cos(alpha)
         }
     }
 }
@@ -90,7 +103,7 @@ class Spirograph {
 }
 
 class CircularGearWheel extends GearWheel {
-    constructor(teeth, excenter = 0.8, offset = 0) {
+    constructor(teeth, excenter = 0, offset = 0) {
         super(teeth, excenter, offset);
     }
 
