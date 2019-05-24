@@ -120,24 +120,6 @@ class CircularGearWheel extends GearWheel {
         return (this.teeth == 0) ? 0 : step / this.teeth * 2 * Math.PI;
     }
 
-    centerPosition(step, pos, alpha) {
-        const r = this.radius();
-        return { x: pos.x + Math.sin(alpha) * r, y: pos.y + Math.cos(alpha) * r }; 
-    }
-
-    penPosition(step, pos, alpha) {
-        const r = this.radius() * this.excenter;
-        const gamma = alpha + this.angle(step);
-        const c = this.centerPosition(step, pos, alpha);
-        return { x: c.x + r * Math.sin(gamma), y: c.y + r * Math.cos(gamma)};
-    }
-
-    rotatorPosition(step) {
-        const r = this.radius();
-        const alpha = this.angle(step);
-        return { x: r * Math.sin(alpha), y: r * Math.cos(alpha)};
-    }
-
     teethPose(n) {
         const r = this.radius();
         const a = this.angle(n);
