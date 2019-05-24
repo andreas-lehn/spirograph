@@ -12,7 +12,7 @@
             let rotator = new CircularGearWheel(55, 25);
             let stator = new CircularGearWheel(-95);
             let spiro = new Spirograph(stator, rotator);
-            spirograph.setAttribute("d", spiro.path());
+            spiro.updatePathOf(spirograph);
         </script>
     </body>
 </html>

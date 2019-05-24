@@ -105,6 +105,10 @@ class Spirograph {
         result += " Z";
         return result;
     }
+
+    updatePathOf(pathElement) {
+        pathElement.setAttribute("d", this.path());
+    }
 }
 
 class CircularGearWheel extends GearWheel {
