@@ -11,12 +11,10 @@ class GearWheel {
      * 
      * @param {Number} teeth Number of teeth
      * @param {Number} excenter Distance from the center in mm 
-     * @param {Number} offset Number of teeth the exenter is offseted 
      */
-    constructor(teeth, excenter, offset) {
+    constructor(teeth, excenter) {
         this.teeth = teeth;
         this.excenter = excenter;
-        this.offset = offset;
     }
 
     /** 
@@ -56,21 +54,28 @@ class GearWheel {
 }
 
 class Spirograph {
-    constructor(stator, rotator) {
+    /**
+     * Constructs a new Spirograph object
+     * @param {GearWheel} stator Stator of the spirograph
+     * @param {GearWheel} rotator Rotator of the spirograph 
+     * @param {Number} offset Number of teeth the rotator is offseted 
+     */
+    constructor(stator, rotator, offset = 0) {
         this.stator = stator;
         this.rotator = rotator;
+        this.offset = offset;
     }
 
     /* Returns the pen position of step */
     penPosition(step) {
         //return this.rotator.penPosition(step, this.stator.rotatorPosition(step), this.stator.angle(step));
-        return this.rotator.excenterPos(this.stator.teethPose(step), step);
+        return this.rotator.excenterPos(this.stator.teethPose(step), step + this.offset);
     }
 
     /* Returns the center position of the rotator at step */
     rotatorPosition(step) {
         // return this.rotator.centerPosition(step, this.stator.rotatorPosition(step), this.stator.angle(step));
-        return this.rotator.center(this.stator.teethPose(step), step);
+        return this.rotator.center(this.stator.teethPose(step), step + this.offset);
     }
 
     /* Returns all points of the spirograph */
@@ -103,8 +108,8 @@ class Spirograph {
 }
 
 class CircularGearWheel extends GearWheel {
-    constructor(teeth, excenter = 0, offset = 0) {
-        super(teeth, excenter, offset);
+    constructor(teeth, excenter = 0) {
+        super(teeth, excenter);
     }
 
     radius() {
@@ -122,7 +127,7 @@ class CircularGearWheel extends GearWheel {
 
     penPosition(step, pos, alpha) {
         const r = this.radius() * this.excenter;
-        const gamma = alpha + this.angle(step + this.offset);
+        const gamma = alpha + this.angle(step);
         const c = this.centerPosition(step, pos, alpha);
         return { x: c.x + r * Math.sin(gamma), y: c.y + r * Math.cos(gamma)};
     }
