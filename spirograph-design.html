@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <script src="spirograph.js"></script>
+        <script>
+            let step = 0;
+            let path = "";
+            let draw = false;
+            let rotator = new CircularGearWheel(40, 15);
+            let stator = new CircularGearWheel(72);
+            let spiro = new Spirograph(stator, rotator);
+
+            function startDrawing() {
+                draw = true;
+                let pos = spiro.penPosition(step);
+                path += " M " + pos.x + " " + pos.y;
+            }
+
+            function stopDrawing() {
+                draw = false;
+            }
+
+            function clearDrawing() {
+                path = "";
+                stopDrawing();
+                updateSketch();
+            }
+
+            function move(direction) {
+                step += direction;
+                if (draw) {
+                    let pos = spiro.penPosition(step);
+                    path += " L " + pos.x + " " + pos.y;
+                }
+                updateSketch();
+            }
+
+            let mover = {
+                timerId: null,
+                start(dir) {
+                    this.timerId = setInterval(() => move(dir), 100);
+                    move(dir);
+                },
+                stop() {
+                    clearInterval(this.timerId);
+                    timerId: null;
+                }
+            };
+
+            function setSize(wheel, size) {
+                wheel.teeth = Number(size);
+                stopDrawing();
+                updateStatistics();
+                updateSketch();
+            }
+            
+            function setOffset(offset) {
+                spiro.offset = Number(offset);
+                stopDrawing();
+                updateStatistics();
+                updateSketch();
+            }
+            
+            function setExcenter(d) {
+                rotator.excenter = Number(d);
+                stopDrawing();
+                updateStatistics();
+                updateSketch();
+            }
+            
+            function updateStatistics() {
+            }
+
+            function updateSketch() {
+                statorCircle.setAttribute("r", stator.radius(step));
+                rotatorCircle.setAttribute("r", Math.abs(rotator.radius(step)));
+                let rotatorPos = spiro.rotatorPosition(step);
+                rotatorCircle.setAttribute("cx", rotatorPos.x);
+                rotatorCircle.setAttribute("cy", rotatorPos.y);
+                centerRotator.setAttribute("cx", rotatorPos.x);
+                centerRotator.setAttribute("cy", rotatorPos.y);
+                lineToRotator.setAttribute("x2", rotatorPos.x);
+                lineToRotator.setAttribute("y2", rotatorPos.y);
+                let penPos = spiro.penPosition(step);
+                excenterPoint.setAttribute("cx", penPos.x);
+                excenterPoint.setAttribute("cy", penPos.y);
+                lineToExcenter.setAttribute("x1", rotatorPos.x);
+                lineToExcenter.setAttribute("y1", rotatorPos.y);
+                lineToExcenter.setAttribute("x2", penPos.x);
+                lineToExcenter.setAttribute("y2", penPos.y);
+                spirograph.setAttribute("d", path);
+            }
+
+            function drawSpirograph() {
+                path += " " + spiro.path();
+                spirograph.setAttribute("d", path);
+                pathInfo.innerHTML = path;
+                let bbox = spirograph.getBBox();
+                bbInfo.innerHTML = `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`;
+                widthInfo.innerHTML = `${bbox.width - bbox.x}`;
+                heightInfo.innerHTML = `${bbox.height - bbox.y}`;
+            }
+
+            function addToDrawing() {
+                let p = document.createElement("path");
+                p.setAttribute("stroke", "blue");
+                p.setAttribute("d", stator.createPath());
+                drawing.appendChild(p);
+            }
+        </script>
+        
+        <form name="spirographData">
+            <table>
+                <tr>
+                    <td>Stator Size:</td>
+                    <td>
+                        <input name="statorTeeth" type="number" value="72" onchange="setSize(stator, this.value)">
+                    </td>
+                    <td>Teeth</td>
+                </tr>
+                <tr>
+                    <td>Rotator Size:</td>
+                    <td>
+                        <input name="rotatorTeeth" type="number" value="40" onchange="setSize(rotator, this.value)">
+                    </td>
+                    <td>Teeth</td>
+                </tr>
+                <tr>
+                    <td>Excenter:</td>
+                    <td>
+                        <input name="excenterPercent" type="number" value="15" onchange="setExcenter(this.value)">
+                    </td>
+                    <td>mm</td>
+                </tr>
+                <tr>
+                    <td>Offset:</td>
+                    <td>
+                        <input name="offsetTeeth" type="number" value="0" onchange="setOffset(this.value)">
+                    </td>
+                    <td>Teeth</td>
+                </tr>
+            </table>
+        </form>
+        
+        <p>
+            <button type="button" onmousedown="mover.start(-1)" onmouseup="mover.stop()">Backwards</button>
+            <button type="button" onmousedown="mover.start(1)" onmouseup="mover.stop()">Forewards</button>
+            <button type="button" onclick="startDrawing()">Start</button>
+            <button type="button" onclick="stopDrawing()">Stop</button>
+            <button type="button" onclick="drawSpirograph()">Draw</button>
+            <button type="button" onclick="clearDrawing()">Clear</button>
+            <button type="button" onclick="addToDrawing()">Add</button>
+        </p>
+        <svg id="sketch" width="10cm" height="10cm" viewBox="-100 -100 200 200">
+            <circle id="statorCircle"   cx="0" cy="0" r="100" stroke="black" stroke-width="1" fill="yellow" />
+            <circle id="rotatorCircle"  cx="0" cy="-150" r="50"  stroke="black" stroke-width="1" fill="green" />
+            <circle cx="0" cy="0" r="1"   stroke="black" fill="black" />
+            <circle id="centerRotator" cx="0" cy="-150" r="1"   stroke="black" fill="black" />
+            <line id="lineToRotator" x1="0" y1="0" x2="0" y2="-150" stroke="black" stroke-width="0.5" />
+            <line id="lineToExcenter" x1="20" y1="-170" x2="0" y2="-150" stroke="black" stroke-width="0.5" />
+            <circle id="excenterPoint" cx="20" cy="-170"  r="1.5"   stroke="black" stroke-with="0.5" fill="blue" />
+            <path id="spirograph" d="M 0 0 L 10 10" stroke="blue" stroke-width="1" fill-opacity="0"/>
+        </svg>
+        <p>boundingBox = <span id="bbInfo"></span></p>
+        <p>width = "<span id="widthInfo"></span>mm" height = "<span id="heightInfo"></span>mm"</p>
+        <p>d = "<span id="pathInfo"></span>"</p>
+        <script>
+            updateSketch();
+        </script>
+    </body>
+</html>
