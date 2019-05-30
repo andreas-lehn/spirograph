@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Spriograph Design 3</title>
+    </head>
+    <body>
+        <script src="../spirograph.js"></script>
+        <svg id="sketch" width="10cm" height="10cm" viewBox="-100 -100 200 200">
+            <path id="spirograph1" stroke="red" stroke-width="0.5" fill-opacity="0"/>
+            <path id="spirograph2" stroke="blue" stroke-width="0.5" fill-opacity="0"/>
+            <path id="spirograph3" stroke="red" stroke-width="0.5" fill-opacity="0"/>
+            <path id="spirograph4" stroke="green" stroke-width="0.5" fill-opacity="0"/>
+            <path id="spirograph5" stroke="green" stroke-width="0.5" fill-opacity="0"/>
+        </svg>
+        <script>
+            let rotator = new CircularGearWheel(80, 33);
+            let stator = new CircularGearWheel(-105);
+            let spiro = new Spirograph(stator, rotator);
+            spiro.updatePathOf(spirograph1);
+            rotator.excenter = 28;
+            spiro.updatePathOf(spirograph2);
+            rotator.excenter = 23;
+            spiro.updatePathOf(spirograph3);
+            rotator.excenter = 18;
+            spiro.updatePathOf(spirograph4);
+            rotator.excenter = 13;
+            spiro.updatePathOf(spirograph5);
+        </script>
+    </body>
+</html>
