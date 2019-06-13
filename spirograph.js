@@ -2,8 +2,8 @@
  * spirograph.js
  */
 
-let MODUL = 1;
-let TEETH_LENGTH = Math.PI * MODUL;
+const MODUL = 1;
+const TEETH_LENGTH = Math.PI * MODUL;
 
 class GearWheel {
     /**
@@ -18,12 +18,12 @@ class GearWheel {
     }
 
     /** 
-     * Calculate the teeth pose of teeth n.
+     * Calculate the tooth pose of tooth n.
      *
-     * The teeth pos consists of the position of the teeth and its angle.
+     * The tooth pos consists of the position of the tooth and its angle.
      * This mehtod has to be overriden by subclasses.
      */
-    teethPose(n) {
+    toothPose(n) {
         return { x: 0, y:0, alpha: 0};
     }
 
@@ -34,8 +34,8 @@ class GearWheel {
      * @param {Number} n Step
      */
     center(pose1, n) {
-        let pose2 = this.teethPose(n);
-        let alpha = pose1.alpha + pose2.alpha;
+        const pose2 = this.toothPose(n);
+        const alpha = pose1.alpha + pose2.alpha;
         return {
             x: pose1.x - pose2.x * Math.cos(alpha) + pose2.y * Math.sin(alpha),
             y: pose1.y + pose2.x * Math.sin(alpha) + pose2.y * Math.cos(alpha)
@@ -43,9 +43,9 @@ class GearWheel {
     }
 
     excenterPos(pose1, n) {
-        let pose2 = this.teethPose(n);
-        let alpha = pose1.alpha + pose2.alpha;
-        let c = this.center(pose1, n);
+        const pose2 = this.toothPose(n);
+        const alpha = pose1.alpha + pose2.alpha;
+        const c = this.center(pose1, n);
         return {
             x: c.x + this.excenter * Math.sin(alpha),
             y: c.y + this.excenter * Math.cos(alpha)
@@ -69,13 +69,13 @@ class Spirograph {
     /* Returns the pen position of step */
     penPosition(step) {
         //return this.rotator.penPosition(step, this.stator.rotatorPosition(step), this.stator.angle(step));
-        return this.rotator.excenterPos(this.stator.teethPose(step), step + this.offset);
+        return this.rotator.excenterPos(this.stator.toothPose(step), step + this.offset);
     }
 
     /* Returns the center position of the rotator at step */
     rotatorPosition(step) {
         // return this.rotator.centerPosition(step, this.stator.rotatorPosition(step), this.stator.angle(step));
-        return this.rotator.center(this.stator.teethPose(step), step + this.offset);
+        return this.rotator.center(this.stator.toothPose(step), step + this.offset);
     }
 
     /* Returns all points of the spirograph */
@@ -88,8 +88,8 @@ class Spirograph {
 
     /* Returns the count of points */
     stepCount() {
-        let rt = this.rotator.teeth;
-        let st = this.stator.teeth;
+        const rt = this.rotator.teeth;
+        const st = this.stator.teeth;
         return (rt == 0) ? st : kgv(Math.abs(rt), Math.abs(st));
     }
 
@@ -97,7 +97,7 @@ class Spirograph {
     path() {
         let point = this.penPosition(0);
         let result = `M ${point.x} ${point.y}`;
-        let N = this.stepCount();
+        const N = this.stepCount();
         for(let i = 1; i < N; i++) {
             point = this.penPosition(i);
             result += ` L ${point.x} ${point.y}`;
@@ -124,7 +124,7 @@ class CircularGearWheel extends GearWheel {
         return (this.teeth == 0) ? 0 : step / this.teeth * 2 * Math.PI;
     }
 
-    teethPose(n) {
+    toothPose(n) {
         const r = this.radius();
         const a = this.angle(n);
         return { 
