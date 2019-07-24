@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Spirograph Desing</title>
+        <title>Spirograph Designer</title>
         <style>
             label { display: inline-block; width: 6em }
         </style>
@@ -13,7 +13,7 @@
             Enjoy!
         </p>
         <form name="spirographData">
-            <div><label>Stator Teeth:</label><input type="number" value="72" onchange="setSize(stator, Number(this.value))"><label>Teeth</label></div>
+            <div><label>Stator Size:</label><input type="number" value="72" onchange="setSize(stator, Number(this.value))"><label>Teeth</label></div>
             <div><label>Rotator Size:</label><input type="number" value="40" onchange="setSize(rotator, Number(this.value))"><label>Teeth</label></div>
             <div><label>Excenter:</label><input type="number" value="15" onchange="setExcenter(Number(this.value))"><label>mm</label></div>
             <div><label>Offset:</label><input name="offsetTeeth" type="number" value="0" onchange="setOffset(Number(this.value))"><label>Teeth</label></div>
