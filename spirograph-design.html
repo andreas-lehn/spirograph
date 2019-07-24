@@ -28,7 +28,7 @@
             <button type="button" onclick="clearDrawing()">Clear</button>
         </div>
         <div id="sketch">
-        <svg width="10cm" height="10cm" viewBox="-100 -100 200 200">
+        <svg width="10cm" height="10cm" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
             <circle id="statorCircle" r="100" stroke="black" fill="yellow" />
             <circle id="rotatorCircle" cy="-150" r="50"  stroke="black" fill="green" />
             <circle r="1" stroke="black" fill="black" />
@@ -41,6 +41,7 @@
         </div>
         <p></p>        
         <button type="Download" onclick="downloadDrawing()">Download</button>
+        <a id="downloadLink" download="spirograph.svg" style="display: none"></a>
         <script src="spirograph.js"></script>
         <script>
             let step = 0;
@@ -90,27 +91,21 @@
             function setSize(wheel, size) {
                 wheel.teeth = Number(size);
                 stopDrawing();
-                updateStatistics();
                 updateSketch();
             }
             
             function setOffset(offset) {
                 spiro.offset = Number(offset);
                 stopDrawing();
-                updateStatistics();
                 updateSketch();
             }
             
             function setExcenter(d) {
                 rotator.excenter = Number(d);
                 stopDrawing();
-                updateStatistics();
                 updateSketch();
             }
             
-            function updateStatistics() {
-            }
-
             function updateSketch() {
                 statorCircle.setAttribute("r", stator.radius(step));
                 rotatorCircle.setAttribute("r", Math.abs(rotator.radius(step)));
@@ -134,18 +129,23 @@
             function drawSpirograph() {
                 path += " " + spiro.path();
                 spirograph.setAttribute("d", path);
-                pathInfo.innerHTML = path;
-                let bbox = spirograph.getBBox();
-                bbInfo.innerHTML = `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`;
-                widthInfo.innerHTML = `${bbox.width - bbox.x}`;
-                heightInfo.innerHTML = `${bbox.height - bbox.y}`;
             }
 
-            function addToDrawing() {
-                let p = document.createElement("path");
-                p.setAttribute("stroke", "blue");
-                p.setAttribute("d", stator.createPath());
-                drawing.appendChild(p);
+            let lastDownload = null;
+
+            function downloadDrawing() {
+                if (lastDownload != null) {
+                    window.URL.revokeObjectURL(lastDownload);
+                    lastDownload = null;
+                }
+
+                let content = '<?xml version="1.0" standalone="no"?>' 
+                    + '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
+                    + sketch.innerHTML;
+                let blob = new Blob([content], { type: "image/svg+xml"});
+                lastDownload = window.URL.createObjectURL(blob);
+                downloadLink.href = lastDownload;
+                downloadLink.click();
             }
         </script>
     </body>
