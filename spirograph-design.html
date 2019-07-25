@@ -69,21 +69,14 @@
                 spirograph.setAttribute("d", spiro.path());
             }
 
-            let lastDownload = null;
-
             function downloadDrawing() {
-                if (lastDownload != null) {
-                    window.URL.revokeObjectURL(lastDownload);
-                    lastDownload = null;
-                }
-
                 const content = [
                     '<?xml version="1.0" standalone="no"?>', 
                     '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
                     sketch.innerHTML
                 ];
-                lastDownload = window.URL.createObjectURL(new Blob(content, { type: "image/svg+xml"}));
-                downloadLink.href = lastDownload;
+                if (downloadLink.href !== "") window.URL.revokeObjectURL(downloadLink.href);
+                downloadLink.href = window.URL.createObjectURL(new Blob(content, { type: "image/svg+xml"}));
                 downloadLink.click();
             }
         </script>
