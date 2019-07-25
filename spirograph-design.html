@@ -9,8 +9,7 @@
     <body onload="updateSketch()">
         <p>
             This page allows you to design your own spirographs.
-            Just enter the data in the form below and see what happens by pressing the buttons.
-            Enjoy!
+            Just enter the spirograph data in the form below and see what happens.
         </p>
         <form name="spirographData">
             <div><label>Stator Size:</label><input type="number" value="72" onchange="setSize(stator, Number(this.value))"><label>Teeth</label></div>
@@ -19,7 +18,7 @@
             <div><label>Offset:</label><input name="offsetTeeth" type="number" value="0" onchange="setOffset(Number(this.value))"><label>Teeth</label></div>
         </form>
         <svg width="10cm" height="10cm" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
-            <path id="spirograph" stroke="blue" fill="none"/>
+            <path id="spirograph" stroke="green" fill="none"/>
         </svg>
         <div>
             <button type="button" onclick="addToDrawing()">Add</button>
@@ -39,7 +38,7 @@
             let spiro = new Spirograph(stator, rotator);
 
             let spirographs = [];
-            
+
             function clearDrawing() {
             }
 
@@ -58,13 +57,11 @@
             
             function setOffset(offset) {
                 spiro.offset = Number(offset);
-                stopDrawing();
                 updateSketch();
             }
             
             function setExcenter(d) {
                 rotator.excenter = Number(d);
-                stopDrawing();
                 updateSketch();
             }
             
