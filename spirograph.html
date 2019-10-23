@@ -1,72 +1,55 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Play Spirograph</title>
+        <title>Animated Spirograph</title>
         <style>
             .gearwheel { stroke: black; fill: yellow; fill-opacity: 0.3 }
             label { display: inline-block; width: 6em }
-            svg {background-color: lightgray }
+            svg   { background-color: white }
+            body  { background-color: lightgray }
+            path  { stroke: blue; fill: none; stroke-width: 1; stroke-opacity: 0.8 }
         </style>
     </head>
     <body onload="pageLoaded()">
         <p>
             This page allows you to experiment with spirographs.
-            Just enter the spirograph data in the form below.
-        </p>
-        <p>
-            Press <b>Forwards</b> and <b>Backwords</b> button to move then pen.
-            Use <b>Clear</b> to start with an new spirograph.
+            Just enter the spirograph data in the form below
+            and see how the gearwheel turns and the pen moves.
             Use negative values for the stator size to let the rotator run inside the stator.
-        </p>
-        <p>
             Enjoy!
         </p>
         <form>
             <div><label>Stator Size:</label><input type="number" value="72" onchange="setSize(stator, Number(this.value))"><label>Teeth</label></div>
             <div><label>Rotator Size:</label><input type="number" value="40" onchange="setSize(rotator, Number(this.value))"><label>Teeth</label></div>
             <div><label>Excenter:</label><input type="number" value="15" onchange="setExcenter(Number(this.value))"><label>mm</label></div>
-            <div><label>Offset:</label><input name="offsetTeeth" type="number" value="0" onchange="setOffset(Number(this.value))"><label>Teeth</label></div>
         </form>
         <p></p>
-        <div>
-            <button type="button" onmousedown="mover.start(-1)" onmouseup="mover.stop()">Backwards</button>
-            <button type="button" onmousedown="mover.start(1)" onmouseup="mover.stop()">Forewards</button>
-            <button type="button" onclick="clearDrawing()">Clear</button>
-        </div>
         <svg width="10cm" height="10cm" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
             <circle id="statorCircle" class="gearwheel"/>
+            <path id="spirograph"/>
             <circle id="rotatorCircle" class="gearwheel"/>
-            <circle r="2" fill="black" />
-            <circle id="centerRotator"r="1"   stroke="black" fill="black" />
+            <circle r="1.5" fill="black" />
+            <circle id="centerRotator" r="1" stroke="black" fill="black" />
             <line id="lineToRotator" stroke="black" stroke-width="0.5" />
             <line id="lineToExcenter" stroke="black" stroke-width="0.5" />
-            <circle id="excenterPoint" r="1.5" stroke="black" stroke-with="0.5" fill="blue" />
-            <path id="spirograph" stroke="blue" fill="none"/>
+            <circle id="excenterPoint" r="1.2" stroke="black" stroke-with="0.1" fill="blue" />
         </svg>
         <script src="spirograph.js"></script>
         <script>
             let step = 0;
-            let path = "";
             let rotator = new CircularGearWheel(40, 15);
             let stator = new CircularGearWheel(72);
             let spiro = new Spirograph(stator, rotator);
 
-            function clearDrawing() {
-                path = "";
-                updateSketch();
-            }
-
             function move(direction) {
                 step += direction;
-                let pos = spiro.penPosition(step);
-                path += " L " + pos.x + " " + pos.y;
                 updateSketch();
             }
 
             let mover = {
                 timerId: null,
                 start(dir) {
-                    this.timerId = setInterval(() => move(dir), 100);
+                    this.timerId = setInterval(() => move(dir), 10);
                     move(dir);
                 },
                 stop() {
@@ -75,26 +58,13 @@
                 }
             };
 
-            function movePen() {
-                let pos = spiro.penPosition(step);
-                path += " M " + pos.x + " " + pos.y;
-            }
-
             function setSize(wheel, size) {
                 wheel.teeth = Number(size);
-                movePen();
-                updateSketch();
-            }
-            
-            function setOffset(offset) {
-                spiro.offset = Number(offset);
-                movePen();
                 updateSketch();
             }
             
             function setExcenter(d) {
                 rotator.excenter = Number(d);
-                movePen();
                 updateSketch();
             }
             
@@ -115,12 +85,12 @@
                 lineToExcenter.setAttribute("y1", rotatorPos.y);
                 lineToExcenter.setAttribute("x2", penPos.x);
                 lineToExcenter.setAttribute("y2", penPos.y);
-                spirograph.setAttribute("d", path);
+                spirograph.setAttribute("d", spiro.path());
             }
 
             function pageLoaded() {
-                movePen();
                 updateSketch();
+                mover.start(0.1)
             }
         </script>
     </body>
