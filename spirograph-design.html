@@ -4,7 +4,6 @@
         <title>Spirograph Designer</title>
         <style>
             label { display: inline-block; width: 6em }
-            path { fill: none; stroke: blue; stroke-width: "0.5" }
         </style>
     </head>
     <body onload="updateSketch()">
@@ -21,19 +20,6 @@
         <svg width="10cm" height="10cm" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
             <path id="spirograph" stroke="green" fill="none"/>
         </svg>
-        <div>
-            <button type="button" onmousedown="mover.start(-1)" onmouseup="mover.stop()">Move Backwards</button>
-            <button type="button" onmousedown="mover.start(1)" onmouseup="mover.stop()">Move Forewards</button>
-            <button type="button" onclick="startDrawing()">Start Drawing</button>
-            <button type="button" onclick="stopDrawing()">Stop Drawing</button>
-            <button type="button" onclick="drawSpirograph()">Draw Spirograph</button>
-            <button type="button" onclick="clearSketch()">Clear</button>
-            <button type="button" onclick="downloadSketch()">Download</button>
-        </div>
-        <div id="sketch">
-        <svg id="drawing" width="10cm" height="10cm" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"></svg>
-        </svg>
-        </div>
         <p>
             If you are satified with the spirograph you designed above, you can add it to the drawing below.
             Multipe spirographs can be added so you can create amazing drawings.
@@ -75,12 +61,6 @@
 
             let spirographs = [];
 
-            function clearSketch() {
-                path = "";
-                stopDrawing();
-                updateSketch();
-            }
-
             function setSize(wheel, size) {
                 wheel.teeth = Number(size);
                 updateSketch();
@@ -100,15 +80,9 @@
                 spirograph.setAttribute("d", spiro.path());
             }
 
+            let lastDownload = null;
+
             function downloadDrawing() {
-                download(drawing);
-            }
-
-            function downloadSketch() {
-                download(sketch);
-            }
-
-            function download(element) {
                 if (lastDownload != null) {
                     window.URL.revokeObjectURL(lastDownload);
                     lastDownload = null;
@@ -117,7 +91,7 @@
                 const content = [
                     '<?xml version="1.0" standalone="no"?>', 
                     '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
-                    element.innerHTML
+                    drawing.innerHTML
                 ];
                 if (downloadLink.href !== "") window.URL.revokeObjectURL(downloadLink.href);
                 downloadLink.href = window.URL.createObjectURL(new Blob(content, { type: "image/svg+xml"}));
