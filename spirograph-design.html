@@ -4,6 +4,7 @@
         <title>Spirograph Designer</title>
         <style>
             label { display: inline-block; width: 6em }
+            path { fill: none; stroke: blue; stroke-width: "0.5" }
         </style>
     </head>
     <body onload="updateSketch()">
@@ -25,7 +26,8 @@
             <button type="button" onclick="startDrawing()">Start Drawing</button>
             <button type="button" onclick="stopDrawing()">Stop Drawing</button>
             <button type="button" onclick="drawSpirograph()">Draw Spirograph</button>
-            <button type="button" onclick="clearDrawing()">Clear</button>
+            <button type="button" onclick="clearSketch()">Clear</button>
+            <button type="button" onclick="downloadSketch()">Download</button>
         </div>
         <div id="sketch">
         <svg width="10cm" height="10cm" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
@@ -39,7 +41,17 @@
             <path id="spirograph" d="M 0 0 L 10 10" stroke="blue" fill="none"/>
         </svg>
         </div>
-        <p></p>        
+        <p>
+            If you are satified with the spirograph you designed above, you can add it to the drawing below.
+            Multipe spirographs can be added so you can create amazing drawings.
+        </p>
+        <button type="button" onclick="addToDrawing()">Add</button>
+        <button type="button" onclick="removeFromDrawing()">Remove</button>
+        <button type="button" onclick="clearDrawing()">Clear</button>
+        <div id="drawing">
+            <svg id="drawingSVG" width="10cm" height="10cm" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
+            </svg>
+        </div>                
         <button type="Download" onclick="downloadDrawing()">Download</button>
         <a id="downloadLink" download="spirograph.svg" style="display: none"></a>
         <script src="spirograph.js"></script>
@@ -50,6 +62,26 @@
             let rotator = new CircularGearWheel(40, 15);
             let stator = new CircularGearWheel(72);
             let spiro = new Spirograph(stator, rotator);
+            let elementList = [];
+
+            function addToDrawing() {
+                let element = document.createElementNS("http://www.w3.org/2000/svg", "path")
+                element.setAttribute("d", spirograph.getAttribute("d"));
+                element.setAttribute("stroke", spirograph.getAttribute("stroke"));
+                element.setAttribute("fill", "none");
+                drawingSVG.appendChild(element);
+                elementList.push(element);
+            }
+
+            function removeFromDrawing() {
+                if (elementList.length == 0) return;
+                drawingSVG.removeChild(elementList.pop());
+            }
+
+            function clearDrawing() {
+                elementList.forEach(e => drawingSVG.removeChild(e));
+                elementList = [];
+            }
 
             function startDrawing() {
                 draw = true;
@@ -61,7 +93,7 @@
                 draw = false;
             }
 
-            function clearDrawing() {
+            function clearSketch() {
                 path = "";
                 stopDrawing();
                 updateSketch();
@@ -134,6 +166,14 @@
             let lastDownload = null;
 
             function downloadDrawing() {
+                download(drawing);
+            }
+
+            function downloadSketch() {
+                download(sketch);
+            }
+
+            function download(element) {
                 if (lastDownload != null) {
                     window.URL.revokeObjectURL(lastDownload);
                     lastDownload = null;
@@ -142,7 +182,7 @@
                 const content = [
                     '<?xml version="1.0" standalone="no"?>', 
                     '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
-                    sketch.innerHTML
+                    element.innerHTML
                 ];
                 lastDownload = window.URL.createObjectURL(new Blob(content, { type: "image/svg+xml"}));
                 downloadLink.href = lastDownload;
