@@ -19,19 +19,19 @@
             Enjoy!
         </p>
         <form>
-            <div><label>Stator Size:</label><input type="number" value="72" onchange="setSize(stator, Number(this.value))"><label>Teeth</label></div>
-            <div><label>Rotator Size:</label><input type="number" value="40" onchange="setSize(rotator, Number(this.value))"><label>Teeth</label></div>
-            <div><label>Excenter:</label><input type="number" value="15" onchange="setExcenter(Number(this.value))"><label>mm</label></div>
+            <div><label>Stator Size:</label><input type="number" value="72" onchange="setSize(stator, this.value)"><label>Teeth</label></div>
+            <div><label>Rotator Size:</label><input type="number" value="40" onchange="setSize(rotator, this.value)"><label>Teeth</label></div>
+            <div><label>Excenter:</label><input type="number" value="15" onchange="setExcenter(this.value)"><label>mm</label></div>
         </form>
         <p></p>
         <svg width="10cm" height="10cm" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
             <circle id="statorCircle" class="gearwheel"/>
-            <path id="spirograph"/>
+            <path   id="spirograph"/>
             <circle id="rotatorCircle" class="gearwheel"/>
             <circle r="1.5" fill="black" />
             <circle id="centerRotator" r="1" stroke="black" fill="black" />
-            <line id="lineToRotator" stroke="black" stroke-width="0.5" />
-            <line id="lineToExcenter" stroke="black" stroke-width="0.5" />
+            <line   id="lineToRotator" stroke="black" stroke-width="0.5" />
+            <line   id="lineToExcenter" stroke="black" stroke-width="0.5" />
             <circle id="excenterPoint" r="1.2" stroke="black" stroke-with="0.1" fill="blue" />
         </svg>
         <script src="spirograph.js"></script>
@@ -50,7 +50,6 @@
                 timerId: null,
                 start(dir) {
                     this.timerId = setInterval(() => move(dir), 10);
-                    move(dir);
                 },
                 stop() {
                     clearInterval(this.timerId);
