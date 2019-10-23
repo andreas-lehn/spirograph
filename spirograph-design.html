@@ -4,6 +4,8 @@
         <title>Spirograph Designer</title>
         <style>
             label { display: inline-block; width: 6em }
+            svg { background-color: white }
+            body { background-color: lightgray }
         </style>
     </head>
     <body onload="updateSketch()">
@@ -18,7 +20,7 @@
             <div><label>Offset:</label><input name="offsetTeeth" type="number" value="0" onchange="setOffset(Number(this.value))"><label>Teeth</label></div>
         </form>
         <svg width="10cm" height="10cm" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
-            <path id="spirograph" stroke="green" fill="none"/>
+            <path id="spirograph" stroke="green" stroke-width="0.5" fill="none"/>
         </svg>
         <p>
             If you are satified with the spirograph you designed above, you can add it to the drawing below.
@@ -41,10 +43,8 @@
             let elementList = [];
 
             function addToDrawing() {
-                let element = document.createElementNS("http://www.w3.org/2000/svg", "path")
-                element.setAttribute("d", spirograph.getAttribute("d"));
-                element.setAttribute("stroke", spirograph.getAttribute("stroke"));
-                element.setAttribute("fill", "none");
+                let element = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                ["d", "stroke", "stroke-width", "fill"].forEach(a => element.setAttribute(a, spirograph.getAttribute(a)));
                 drawingSVG.appendChild(element);
                 elementList.push(element);
             }
