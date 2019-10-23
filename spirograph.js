@@ -136,6 +136,7 @@ class CircularGearWheel extends GearWheel {
 }
 
 function ggt(a, b) {
+    if (b == 0) return 1; 
     if (a > b) return ggt(a - b, b);
     if (a < b) return ggt(a, b - a);
     return a;
