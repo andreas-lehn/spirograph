@@ -20,6 +20,7 @@
             <div><label>Pen Color:</label><input name="offsetTeeth" value="green" onchange="setStrokeColor(this.value)"><label>HTML-Color</label></div>
             <div><label>Thickness:</label><input name="offsetTeeth" type="number" value="0.5" onchange="setStrokeWidth(Number(this.value))"><label>mm</label></div>
         </form>
+        <p></p>
         <svg width="10cm" height="10cm" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
             <path id="spirograph" stroke="green" stroke-width="0.5" fill="none"/>
         </svg>
@@ -30,12 +31,15 @@
         <button type="button" onclick="addToDrawing()">Add</button>
         <button type="button" onclick="removeFromDrawing()">Remove</button>
         <button type="button" onclick="clearDrawing()">Clear</button>
+        <p></p>
         <div id="drawing">
             <svg id="drawingSVG" width="10cm" height="10cm" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
             </svg>
-        </div>                
+        </div>
+        <p></p>          
         <button type="Download" onclick="downloadDrawing()">Download</button>
         <a id="downloadLink" download="spirograph.svg" style="display: none"></a>
+        <p>Use the Download-Button to store the drawing on your computer.</p>
         <script src="spirograph.js"></script>
         <script>
             let rotator = new CircularGearWheel(40, 15);
@@ -82,7 +86,7 @@
             function setStrokeWidth(width) {
                 spirograph.setAttribute("stroke-width", width);
             }
-            
+
             function updateSketch() {
                 spirograph.setAttribute("d", spiro.path());
             }
