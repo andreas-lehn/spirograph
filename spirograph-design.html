@@ -14,7 +14,7 @@
             Just enter the spirograph data in the form below and see what happens.
         </p>
         <form name="spirographData">
-            <div><label>Stator Size:</label><input type="number" value="72" onchange="setSize(stator, Number(this.value))"><label>Teeth</label></div>
+            <div><label>Stator Size:</label><input type="number" value="150" onchange="setSize(stator, -Number(this.value))"><label>Teeth</label></div>
             <div><label>Rotator Size:</label><input type="number" value="40" onchange="setSize(rotator, Number(this.value))"><label>Teeth</label></div>
             <div><label>Excenter:</label><input type="number" value="15" onchange="setExcenter(Number(this.value))"><label>mm</label></div>
             <div><label>Offset:</label><input name="offsetTeeth" type="number" value="0" onchange="setOffset(Number(this.value))"><label>Teeth</label></div>
@@ -38,7 +38,7 @@
         <script src="spirograph.js"></script>
         <script>
             let rotator = new CircularGearWheel(40, 15);
-            let stator = new CircularGearWheel(72);
+            let stator = new CircularGearWheel(-150);
             let spiro = new Spirograph(stator, rotator);
             let elementList = [];
 
